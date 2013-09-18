@@ -1,4 +1,56 @@
+require './lib/assets'
+
 class Commands
+
+  class LoadCommand
+    def match?(command)
+      command == "load"
+    end
+
+    def execute(load_commands)
+      filename = load_commands[1]
+      if filename.nil?
+        output = "Sorry, need a file after load command"
+      else
+        output = "#{filename} loaded"
+      end
+      return output
+    end
+  end
+
+  class FindCommand
+
+    def match?(command)
+      command == "find"
+    end
+
+    def execute(command_parts)
+      specificfind = command_parts[1]
+      if specificfind.nil?
+        puts "The 'find' command needs to search for something, utilized by 'find attribute'. Available attributes are: 'RegDate', 'first_name', 'last_name', 'email_address', 'homephone', 'street', 'city', 'state' & 'zipcode'."
+        elsif specificfind == 'regdate'
+          puts "This is the find regdate"
+        elsif specificfind == 'first_name'
+          # loaded_assets = Assets.new
+          # searched_first_name = loaded_assets.contents[:first_name]
+          puts "This is the find first_name"
+        elsif specificfind == 'last_name'
+          puts "This is the find last_name"
+        elsif specificfind == 'email_address'
+          puts "This is the find email_address"
+        elsif specificfind == 'homephone'
+          puts "This is the find homephone"
+        elsif specificfind == 'street'
+          puts "This is the find street"
+        elsif specificfind == 'city'
+          puts "This is the find city"
+        elsif specificfind == 'state'
+          puts "This is the find state"
+        elsif specificfind == 'zipcode'
+          puts "This is the find zipcode"
+      end 
+    end
+  end
 
   class QuitCommand
     def match?(command)
@@ -26,7 +78,6 @@ class Commands
         puts "This is the find help"
       end
     end
-
   end
 
   class QueueCommand
@@ -34,27 +85,28 @@ class Commands
     def match?(command)
       command == "queue"
     end
+    #   "queue"
+    #   "queue count",
 
-    def execute(parts)
-      puts "queue"
+    def execute(command_parts)
+      if command_parts[1] == "count"
+        queue = 0
+      else
+      queue = "The available queue commands are: 
+      'queue count', 'queue clear', 'queue print', 
+      'queue print by <filename>', 'queue save to <filename'. "
+      end
+      return queue
     end
-
+    # [
+    #   "queue clear",
+    #   "queue print",
+    #   "queue print by <attr>",
+    #   "queue save to"
+    # ]
   end
 
-  class FindCommand
-
-    def match?(command)
-      command == "find"
-    end
-
-    def execute(parts)
-      puts "find"
-    end
-
-  end
-
-    class NoActionCommand
-
+  class NoActionCommand
     def match?(command)
       true
     end
@@ -62,7 +114,6 @@ class Commands
     def execute(parts)
       puts "NoAction"
     end
-
   end
 
 end
