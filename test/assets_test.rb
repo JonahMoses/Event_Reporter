@@ -13,10 +13,8 @@ class AssetsTest < MiniTest::Test
     filename = "./event_attendees.csv"
     assets = Assets.new
 
-    assets.open_file(filename)
-    
+    assets.open_file(filename)    
     contents = assets.contents
-
     assert_equal "20010", contents[:zipcode].first
   end
 
