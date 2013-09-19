@@ -10,46 +10,73 @@ class Commands
     def execute(load_commands)
       filename = load_commands[1]
       if filename.nil?
-        output = "Sorry, need a file after load command"
+        output = "Sorry, need to designate which file you would like to load. 'load <filename>'."
+        puts output
       else
-        output = "#{filename} loaded"
+        contents = Assets.new.open_file(filename)
+        assets = Assets.new
+        @attendees = assets.row_names(contents)
+        output = "'#{filename}' loaded"
+        puts output
       end
       return output
     end
   end
 
   class FindCommand
+    attr_reader :queue, :attendees
+
+    def initialize
+      @queue = Queue.new
+    end
 
     def match?(command)
       command == "find"
     end
 
-    def execute(command_parts)
-      specificfind = command_parts[1]
-      if specificfind.nil?
-        puts "The 'find' command needs to search for something, utilized by 'find attribute'. Available attributes are: 'RegDate', 'first_name', 'last_name', 'email_address', 'homephone', 'street', 'city', 'state' & 'zipcode'."
-        elsif specificfind == 'regdate'
-          puts "This is the find regdate"
-        elsif specificfind == 'first_name'
-          # loaded_assets = Assets.new
-          # searched_first_name = loaded_assets.contents[:first_name]
-          puts "This is the find first_name"
-        elsif specificfind == 'last_name'
-          puts "This is the find last_name"
-        elsif specificfind == 'email_address'
-          puts "This is the find email_address"
-        elsif specificfind == 'homephone'
-          puts "This is the find homephone"
-        elsif specificfind == 'street'
-          puts "This is the find street"
-        elsif specificfind == 'city'
-          puts "This is the find city"
-        elsif specificfind == 'state'
-          puts "This is the find state"
-        elsif specificfind == 'zipcode'
-          puts "This is the find zipcode"
-      end 
+    def finding(attribute,value)
+      value = value.downcase
+      attribute = attribute.to_sym
+      
+      @attendees.select {|a| a == attribute}
+      # @attendees.select {|2nd| 2nd == value}
+
+
+      puts "searching"
     end
+
+    def execute(command_parts)
+      @queue.clear
+
+      find_field = command_parts[1]
+      find_value = command_parts[2]
+
+
+      case find_field
+        when "regdate"
+          puts "This is the find regdate"
+        when "first_name"
+          puts "Got to first_name"
+          finding(find_field,find_value)
+        when "last_name"
+          puts "This is the find last_name"
+        when "email_address"
+          puts "This is the find email_address"
+        when "homephone"
+          puts "This is the find homephone"
+        when "street"
+          puts "This is the find street"
+        when "city"
+          puts "This is the find city"
+        when "state"
+          puts "This is the find state"
+        when "zipcode"
+          puts "This is the find zipcode"
+        when nil
+          puts "The 'find' command needs to search for something, utilized by 'find attribute'. Available attributes are: 'RegDate', 'first_name', 'last_name', 'email_address', 'homephone', 'street', 'city', 'state' & 'zipcode'."
+      end
+    end
+
   end
 
   class QuitCommand
@@ -68,42 +95,61 @@ class Commands
       command == "help"
     end
 
-    def execute(parts)
-      specifichelp = parts[1]
-      if specifichelp.nil?
-      puts "The 'help' command will give you some more information on the 'queue' & 'find' commands. To utilize please type 'help <command>' "
-      elsif specifichelp == 'queue'
-        puts "This is the queue help"
-      elsif specifichelp == 'find'
-        puts "This is the find help"
+    def execute(command_parts)
+      specific_help = command_parts[1]
+      case 
+        when specific_help.nil?
+          puts "The 'help' command will give you some more information on the 'queue' & 'find' commands. To utilize please type 'help <command>' "
+        when specific_help == 'queue'
+          puts "This is the queue help"
+        when specific_help == 'find'
+          puts "This is the find help"
       end
     end
   end
 
   class QueueCommand
+    attr_reader :queue
+
+    def initialize
+      @queue = Queue.new
+    end
 
     def match?(command)
       command == "queue"
     end
-    #   "queue"
-    #   "queue count",
 
     def execute(command_parts)
-      if command_parts[1] == "count"
-        queue = 0
-      else
-      queue = "The available queue commands are: 
-      'queue count', 'queue clear', 'queue print', 
-      'queue print by <filename>', 'queue save to <filename'. "
+      case
+        when command_parts[1].nil?
+          queue = "The available queue commands are: 
+          'queue count', 'queue clear', 'queue print', 
+          'queue print by <filename>', 'queue save to <filename>'. " 
+          puts queue
+          return queue
+        when command_parts[1] == "count"
+          queue_count = @queue.size
+          puts "This is the count of your queue: #{queue_count}"
+          return @queue
+        when command_parts[1] == "clear"
+          clear_queue = @queue.clear
+          puts "Reseting your queue."
+          return queue
+        when command_parts[1..2].join(" ") == "print by"
+          printing_queue = @queue
+          puts queue
+          return queue
+        when command_parts[1] == "print"
+          queue = "print"
+          puts queue
+          return queue
+        when command_parts[1..2].join(" ") == "save to"
+          queue = "save to"
+          puts queue
+          return queue
       end
       return queue
     end
-    # [
-    #   "queue clear",
-    #   "queue print",
-    #   "queue print by <attr>",
-    #   "queue save to"
-    # ]
   end
 
   class NoActionCommand
@@ -112,7 +158,7 @@ class Commands
     end
 
     def execute(parts)
-      puts "NoAction"
+      puts "I don't recognize that command. Please refer to 'help' if you need assistance."
     end
   end
 

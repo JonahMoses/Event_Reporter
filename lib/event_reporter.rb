@@ -10,7 +10,7 @@ class EventReporter
     puts "Welcome to the Event Reporter"
     while @command != "quit"
       printf "Awaiting your command: "
-      input         = gets.chomp
+      input = gets.chomp
       @commands.execute_command(input)
     end
   end

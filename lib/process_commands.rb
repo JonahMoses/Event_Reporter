@@ -20,7 +20,6 @@ class ProcessCommands
   def execute_command(input)
     parts = input.split(" ")
     @command = parts[0]
-    @help_for = parts[1]
 
     user_submitted_command(@command).execute(parts)
   end

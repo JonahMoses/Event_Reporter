@@ -18,6 +18,10 @@ class AssetsTest < MiniTest::Test
     assert_equal "20010", contents[:zipcode].first
   end
 
-
 end
 
+class AttendeesTest < MiniTest::Test
+
+  # def test_
+
+end
